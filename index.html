@@ -1,0 +1,1480 @@
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Egzamin na Prawo Jazdy</title>
+
+    <style>
+        /* =========================
+           PODSTAWOWE USTAWIENIA
+        ========================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef5ff, #f8fbff);
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* =========================
+           GŁÓWNY KONTENER
+        ========================= */
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* =========================
+           KARTY
+        ========================= */
+
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(220, 228, 240, 0.9);
+            border-radius: 28px;
+            padding: 45px;
+            box-shadow:
+                0 25px 70px rgba(38, 70, 120, 0.12),
+                0 5px 20px rgba(38, 70, 120, 0.06);
+            animation: cardAppear 0.6s ease;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* =========================
+           EKRAN STARTOWY
+        ========================= */
+
+        .logo {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 20px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 22px;
+            background: linear-gradient(135deg, #1677ff, #4aa0ff);
+
+            color: white;
+            font-size: 34px;
+
+            box-shadow: 0 15px 30px rgba(22, 119, 255, 0.25);
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #6b768a;
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 35px;
+        }
+
+        .form {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #39445a;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 18px;
+
+            border: 1px solid #dce3ee;
+            border-radius: 14px;
+
+            outline: none;
+            font-size: 16px;
+
+            background: #f9fbfe;
+
+            transition:
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+        .input-group input:focus {
+            background: white;
+            border-color: #1680ff;
+            box-shadow: 0 0 0 4px rgba(22, 128, 255, 0.10);
+        }
+
+        /* =========================
+           PRZYCISKI
+        ========================= */
+
+        .primary-button {
+            position: relative;
+            overflow: hidden;
+
+            width: 100%;
+            border: none;
+
+            padding: 17px 25px;
+            margin-top: 10px;
+
+            border-radius: 15px;
+
+            background: linear-gradient(135deg, #0878ff, #3297ff);
+            color: white;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 12px 25px rgba(8, 120, 255, 0.25);
+
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 17px 35px rgba(8, 120, 255, 0.32);
+        }
+
+        .primary-button:active {
+            transform: scale(0.97);
+        }
+
+        /* Efekt świetlny na przycisku */
+
+        .primary-button::before {
+            content: "";
+            position: absolute;
+
+            top: 0;
+            left: -100%;
+
+            width: 60%;
+            height: 100%;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.35),
+                transparent
+            );
+
+            transform: skewX(-20deg);
+
+            transition: left 0.6s ease;
+        }
+
+        .primary-button:hover::before {
+            left: 130%;
+        }
+
+        /* =========================
+           EKRAN EGZAMINU
+        ========================= */
+
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .exam-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .timer {
+            background: #eef6ff;
+            color: #0878ff;
+
+            padding: 10px 15px;
+            border-radius: 12px;
+
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .progress-area {
+            margin-bottom: 30px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+
+            color: #68748a;
+            font-size: 14px;
+
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 9px;
+
+            background: #e8edf5;
+            border-radius: 100px;
+
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+
+            background: linear-gradient(90deg, #0878ff, #56aaff);
+
+            border-radius: 100px;
+
+            transition: width 0.4s ease;
+        }
+
+        .question-number {
+            color: #0878ff;
+            font-size: 14px;
+            font-weight: bold;
+
+            margin-bottom: 12px;
+        }
+
+        .question {
+            font-size: 27px;
+            line-height: 1.35;
+
+            margin-bottom: 30px;
+        }
+
+        /* =========================
+           ODPOWIEDZI
+        ========================= */
+
+        .answers {
+            display: grid;
+            gap: 13px;
+        }
+
+        .answer {
+            width: 100%;
+
+            padding: 18px;
+
+            text-align: left;
+
+            border: 1px solid #dce4ef;
+            border-radius: 15px;
+
+            background: #fbfcfe;
+            color: #202a3b;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.18s ease,
+                border-color 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .answer:hover {
+            transform: translateX(4px);
+            border-color: #1680ff;
+            background: #f3f8ff;
+            box-shadow: 0 8px 20px rgba(25, 110, 210, 0.08);
+        }
+
+        .answer-letter {
+            display: inline-flex;
+
+            width: 35px;
+            height: 35px;
+
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 10px;
+
+            background: #eaf3ff;
+            color: #0878ff;
+
+            font-weight: bold;
+
+            margin-right: 12px;
+        }
+
+        .answer.selected {
+            background: #eaf4ff;
+            border-color: #0878ff;
+            box-shadow: 0 8px 20px rgba(8, 120, 255, 0.12);
+        }
+
+        /* =========================
+           EKRAN WYNIKU
+        ========================= */
+
+        .result-screen {
+            text-align: center;
+        }
+
+        .result-icon {
+            width: 90px;
+            height: 90px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            background: linear-gradient(135deg, #0878ff, #54aaff);
+
+            color: white;
+            font-size: 42px;
+
+            box-shadow: 0 15px 35px rgba(8, 120, 255, 0.25);
+        }
+
+        .result-screen h1 {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .result-subtitle {
+            color: #6b768a;
+            margin-bottom: 30px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+
+            margin-bottom: 30px;
+        }
+
+        .result-box {
+            background: #f7faff;
+
+            border: 1px solid #e3eaf4;
+
+            border-radius: 18px;
+
+            padding: 25px 15px;
+        }
+
+        .result-value {
+            font-size: 29px;
+            font-weight: bold;
+            color: #0878ff;
+
+            margin-bottom: 7px;
+        }
+
+        .result-label {
+            color: #737e91;
+            font-size: 13px;
+        }
+
+        .pass {
+            color: #159447;
+        }
+
+        .fail {
+            color: #d83a3a;
+        }
+
+        /* =========================
+           INFORMACJE
+        ========================= */
+
+        .info {
+            margin-top: 20px;
+
+            padding: 14px;
+
+            background: #f5f8fc;
+
+            border-radius: 12px;
+
+            color: #758095;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           UKRYWANIE EKRANÓW
+        ========================= */
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* =========================
+           RESPONSYWNOŚĆ
+        ========================= */
+
+        @media (max-width: 650px) {
+
+            .card {
+                padding: 28px 20px;
+                border-radius: 22px;
+            }
+
+            .start-screen h1 {
+                font-size: 29px;
+            }
+
+            .question {
+                font-size: 22px;
+            }
+
+            .exam-header {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="container">
+
+        <!-- ======================================
+             EKRAN STARTOWY
+        ======================================= -->
+
+        <div id="startScreen" class="card start-screen">
+
+            <div class="logo">
+                🚗
+            </div>
+
+            <h1>Egzamin na Prawo Jazdy</h1>
+
+            <p class="subtitle">
+                Wypełnij swoje dane i rozpocznij egzamin.
+                Otrzymasz 10 losowych pytań z przygotowanej bazy.
+            </p>
+
+            <div class="form">
+
+                <div class="input-group">
+                    <label for="firstName">Imię</label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        placeholder="Wpisz swoje imię"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="lastName">Nazwisko</label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        placeholder="Wpisz swoje nazwisko"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="ssn">SSN</label>
+                    <input
+                        type="text"
+                        id="ssn"
+                        placeholder="Wpisz SSN"
+                    >
+                </div>
+
+                <button
+                    class="primary-button"
+                    onclick="startExam()"
+                    onmouseenter="hoverSound()"
+                >
+                    Rozpocznij egzamin
+                </button>
+
+                <div class="info">
+                    Egzamin składa się z 10 losowo wybranych pytań.
+                    Każde pytanie posiada cztery odpowiedzi: A, B, C oraz D.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             EKRAN EGZAMINU
+        ======================================= -->
+
+        <div id="examScreen" class="card hidden">
+
+            <div class="exam-header">
+
+                <div class="exam-title">
+                    🚦 Egzamin na prawo jazdy
+                </div>
+
+                <div class="timer" id="timer">
+                    ⏱ 00:00
+                </div>
+
+            </div>
+
+
+            <div class="progress-area">
+
+                <div class="progress-info">
+
+                    <span id="questionCounter">
+                        Pytanie 1 z 10
+                    </span>
+
+                    <span id="progressPercent">
+                        10%
+                    </span>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        id="progress"
+                        class="progress"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="question-number">
+                PYTANIE
+            </div>
+
+            <div
+                id="questionText"
+                class="question"
+            >
+                Pytanie
+            </div>
+
+
+            <div
+                id="answers"
+                class="answers"
+            >
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             EKRAN WYNIKU
+        ======================================= -->
+
+        <div id="resultScreen" class="card result-screen hidden">
+
+            <div class="result-icon">
+                ✓
+            </div>
+
+            <h1>Egzamin zakończony!</h1>
+
+            <p class="result-subtitle" id="resultMessage">
+                Sprawdź swój wynik poniżej.
+            </p>
+
+
+            <div class="result-grid">
+
+                <div class="result-box">
+
+                    <div
+                        id="correctAnswers"
+                        class="result-value"
+                    >
+                        0/10
+                    </div>
+
+                    <div class="result-label">
+                        Poprawne odpowiedzi
+                    </div>
+
+                </div>
+
+
+                <div class="result-box">
+
+                    <div
+                        id="percentage"
+                        class="result-value"
+                    >
+                        0%
+                    </div>
+
+                    <div class="result-label">
+                        Wynik
+                    </div>
+
+                </div>
+
+
+                <div class="result-box">
+
+                    <div
+                        id="finalTime"
+                        class="result-value"
+                    >
+                        00:00
+                    </div>
+
+                    <div class="result-label">
+                        Czas
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="primary-button"
+                onclick="restartExam()"
+                onmouseenter="hoverSound()"
+            >
+                Rozpocznij ponownie
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* ==========================================
+       BAZA 23 PYTAŃ
+    ========================================== */
+
+    const questions = [
+
+        {
+            question: "Co należy zrobić przed zmianą pasa ruchu?",
+            answers: [
+                "Sprawdzić lusterka i upewnić się, że można bezpiecznie zmienić pas",
+                "Natychmiast przyspieszyć",
+                "Zatrzymać samochód",
+                "Włączyć światła awaryjne"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co oznacza czerwone światło sygnalizatora?",
+            answers: [
+                "Można jechać bez ograniczeń",
+                "Należy zatrzymać się przed sygnalizatorem",
+                "Należy przyspieszyć",
+                "Pierwszeństwo ma zawsze pojazd z prawej"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Jaki jest podstawowy cel pasa bezpieczeństwa?",
+            answers: [
+                "Zmniejszenie zużycia paliwa",
+                "Poprawienie komfortu jazdy",
+                "Ochrona osoby podczas zderzenia",
+                "Zwiększenie prędkości samochodu"
+            ],
+            correct: 2
+        },
+
+        {
+            question: "Co powinien zrobić kierowca przed rozpoczęciem cofania?",
+            answers: [
+                "Upewnić się, że za pojazdem jest bezpiecznie",
+                "Włączyć światła drogowe",
+                "Zawsze zatrąbić",
+                "Wyłączyć silnik"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co oznacza znak STOP?",
+            answers: [
+                "Można zwolnić bez zatrzymania",
+                "Należy zatrzymać pojazd i ustąpić pierwszeństwa zgodnie z przepisami",
+                "Droga jest zamknięta",
+                "Można parkować"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Kiedy należy używać kierunkowskazu?",
+            answers: [
+                "Tylko w nocy",
+                "Podczas wykonywania odpowiedniego manewru, np. skrętu lub zmiany pasa",
+                "Tylko podczas jazdy autostradą",
+                "Nigdy w mieście"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Co należy zrobić, gdy zbliżasz się do przejścia dla pieszych?",
+            answers: [
+                "Zwiększyć prędkość",
+                "Zachować szczególną ostrożność i obserwować przejście",
+                "Zawsze użyć klaksonu",
+                "Zjechać na przeciwległy pas"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Co może znacząco wydłużyć drogę hamowania?",
+            answers: [
+                "Dobra widoczność",
+                "Sucha nawierzchnia",
+                "Śliska nawierzchnia",
+                "Prawidłowe ciśnienie w oponach"
+            ],
+            correct: 2
+        },
+
+        {
+            question: "Co należy zrobić podczas wystąpienia aquaplaningu?",
+            answers: [
+                "Gwałtownie skręcić kierownicą",
+                "Zachować spokój i unikać gwałtownych manewrów",
+                "Natychmiast przyspieszyć",
+                "Zaciągnąć hamulec ręczny"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Jak należy zachować się wobec pojazdu uprzywilejowanego?",
+            answers: [
+                "Ułatwić mu przejazd zgodnie z przepisami",
+                "Jechać tuż za nim",
+                "Blokować mu drogę",
+                "Zawsze wyprzedzać go z lewej strony"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co powinieneś zrobić, gdy jesteś zmęczony podczas jazdy?",
+            answers: [
+                "Zwiększyć prędkość",
+                "Otworzyć okno i kontynuować jazdę bez przerwy",
+                "Zrobić przerwę i odpocząć",
+                "Wyłączyć światła"
+            ],
+            correct: 2
+        },
+
+        {
+            question: "Co oznacza znak ograniczenia prędkości?",
+            answers: [
+                "Zalecaną minimalną prędkość",
+                "Maksymalną dozwoloną prędkość na danym odcinku",
+                "Koniec wszystkich ograniczeń",
+                "Zakaz zatrzymywania"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Dlaczego należy zachować odpowiedni odstęp od poprzedzającego pojazdu?",
+            answers: [
+                "Aby mieć czas na reakcję i hamowanie",
+                "Aby jechać szybciej",
+                "Aby zmniejszyć widoczność",
+                "Aby uniknąć używania kierunkowskazu"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co należy zrobić przed otwarciem drzwi samochodu po zatrzymaniu przy drodze?",
+            answers: [
+                "Sprawdzić, czy nie nadjeżdża inny uczestnik ruchu",
+                "Otworzyć drzwi natychmiast",
+                "Włączyć światła drogowe",
+                "Zatrąbić trzy razy"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Jak należy reagować na znak ostrzegający o niebezpiecznym zakręcie?",
+            answers: [
+                "Dostosować prędkość do warunków",
+                "Przyspieszyć",
+                "Zatrzymać się na środku drogi",
+                "Włączyć światła awaryjne"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co powinno być wolne od przedmiotów ograniczających widoczność kierowcy?",
+            answers: [
+                "Pole widzenia kierowcy",
+                "Bagażnik",
+                "Koło zapasowe",
+                "Dywaniki"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co należy zrobić, gdy na drodze pojawi się nagła przeszkoda?",
+            answers: [
+                "Zachować spokój i odpowiednio zareagować, dostosowując manewr do sytuacji",
+                "Zawsze gwałtownie skręcić w lewo",
+                "Przyspieszyć",
+                "Zamknąć oczy"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Dlaczego przed rozpoczęciem jazdy warto sprawdzić ustawienie lusterek?",
+            answers: [
+                "Aby zwiększyć widoczność sytuacji wokół pojazdu",
+                "Aby zmniejszyć zużycie paliwa",
+                "Aby zwiększyć moc silnika",
+                "Aby zmienić kolor samochodu"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co należy zrobić przed wykonaniem skrętu?",
+            answers: [
+                "Odpowiednio zasygnalizować zamiar i upewnić się, że manewr jest bezpieczny",
+                "Wyłączyć silnik",
+                "Zawsze użyć świateł awaryjnych",
+                "Zatrzymać się bez powodu"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Jak należy zachować się na drodze w warunkach ograniczonej widoczności?",
+            answers: [
+                "Dostosować prędkość i zachować większą ostrożność",
+                "Jechać maksymalnie szybko",
+                "Wyłączyć wszystkie światła",
+                "Patrzeć tylko na pojazd przed sobą"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co może być skutkiem jazdy ze zbyt dużą prędkością?",
+            answers: [
+                "Dłuższa droga hamowania i mniejszy czas na reakcję",
+                "Lepsza kontrola nad samochodem",
+                "Zawsze mniejsze zużycie paliwa",
+                "Większa widoczność"
+            ],
+            correct: 0
+        },
+
+        {
+            question: "Co należy zrobić, gdy sygnalizator zmieni światło na czerwone?",
+            answers: [
+                "Kontynuować jazdę bez zmiany prędkości",
+                "Zatrzymać się w odpowiednim miejscu",
+                "Przyspieszyć",
+                "Włączyć światła awaryjne"
+            ],
+            correct: 1
+        },
+
+        {
+            question: "Dlaczego nie należy korzystać z telefonu podczas prowadzenia pojazdu w sposób rozpraszający uwagę?",
+            answers: [
+                "Ponieważ może to ograniczyć uwagę kierowcy i zwiększyć ryzyko zdarzenia",
+                "Ponieważ samochód wtedy automatycznie zwalnia",
+                "Ponieważ zwiększa przyczepność opon",
+                "Ponieważ wyłącza światła"
+            ],
+            correct: 0
+        }
+
+    ];
+
+
+    /* ==========================================
+       ZMIENNE EGZAMINU
+    ========================================== */
+
+    let examQuestions = [];
+
+    let currentQuestion = 0;
+
+    let score = 0;
+
+    let startTime = 0;
+
+    let timerInterval = null;
+
+    let finishedTime = 0;
+
+
+    /* ==========================================
+       DŹWIĘK HOVER
+    ========================================== */
+
+    let audioContext = null;
+
+    function hoverSound() {
+
+        try {
+
+            if (!audioContext) {
+                audioContext = new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+            }
+
+            const oscillator =
+                audioContext.createOscillator();
+
+            const gain =
+                audioContext.createGain();
+
+            oscillator.type = "sine";
+
+            oscillator.frequency.setValueAtTime(
+                650,
+                audioContext.currentTime
+            );
+
+            gain.gain.setValueAtTime(
+                0.035,
+                audioContext.currentTime
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.001,
+                audioContext.currentTime + 0.08
+            );
+
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+
+            oscillator.start();
+
+            oscillator.stop(
+                audioContext.currentTime + 0.08
+            );
+
+        } catch (error) {
+
+            console.log("Dźwięk niedostępny.");
+
+        }
+
+    }
+
+
+    /* ==========================================
+       LOSOWANIE PYTAŃ
+    ========================================== */
+
+    function shuffle(array) {
+
+        let shuffled = [...array];
+
+        for (
+            let i = shuffled.length - 1;
+            i > 0;
+            i--
+        ) {
+
+            const j =
+                Math.floor(Math.random() * (i + 1));
+
+            [
+                shuffled[i],
+                shuffled[j]
+            ] = [
+                shuffled[j],
+                shuffled[i]
+            ];
+
+        }
+
+        return shuffled;
+    }
+
+
+    /* ==========================================
+       ROZPOCZĘCIE EGZAMINU
+    ========================================== */
+
+    function startExam() {
+
+        const firstName =
+            document.getElementById("firstName").value.trim();
+
+        const lastName =
+            document.getElementById("lastName").value.trim();
+
+        const ssn =
+            document.getElementById("ssn").value.trim();
+
+
+        if (
+            firstName === "" ||
+            lastName === "" ||
+            ssn === ""
+        ) {
+
+            alert(
+                "Uzupełnij imię, nazwisko oraz SSN przed rozpoczęciem egzaminu."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Losujemy 10 pytań spośród 23.
+         */
+
+        examQuestions =
+            shuffle(questions).slice(0, 10);
+
+
+        currentQuestion = 0;
+
+        score = 0;
+
+        startTime = Date.now();
+
+        finishedTime = 0;
+
+
+        document
+            .getElementById("startScreen")
+            .classList.add("hidden");
+
+        document
+            .getElementById("resultScreen")
+            .classList.add("hidden");
+
+        document
+            .getElementById("examScreen")
+            .classList.remove("hidden");
+
+
+        startTimer();
+
+        showQuestion();
+
+    }
+
+
+    /* ==========================================
+       TIMER
+    ========================================== */
+
+    function startTimer() {
+
+        clearInterval(timerInterval);
+
+        timerInterval =
+            setInterval(updateTimer, 1000);
+
+        updateTimer();
+
+    }
+
+
+    function updateTimer() {
+
+        const elapsed =
+            Math.floor(
+                (Date.now() - startTime) / 1000
+            );
+
+        document.getElementById("timer")
+            .textContent =
+            "⏱ " + formatTime(elapsed);
+
+    }
+
+
+    function formatTime(totalSeconds) {
+
+        const minutes =
+            Math.floor(totalSeconds / 60);
+
+        const seconds =
+            totalSeconds % 60;
+
+        return (
+            String(minutes).padStart(2, "0")
+            +
+            ":"
+            +
+            String(seconds).padStart(2, "0")
+        );
+
+    }
+
+
+    /* ==========================================
+       POKAZANIE PYTANIA
+    ========================================== */
+
+    function showQuestion() {
+
+        const question =
+            examQuestions[currentQuestion];
+
+
+        const number =
+            currentQuestion + 1;
+
+
+        const percentage =
+            Math.round(
+                (number / 10) * 100
+            );
+
+
+        document.getElementById("questionCounter")
+            .textContent =
+            `Pytanie ${number} z 10`;
+
+
+        document.getElementById("progressPercent")
+            .textContent =
+            `${percentage}%`;
+
+
+        document.getElementById("progress")
+            .style.width =
+            `${percentage}%`;
+
+
+        document.getElementById("questionText")
+            .textContent =
+            question.question;
+
+
+        const answersContainer =
+            document.getElementById("answers");
+
+
+        answersContainer.innerHTML = "";
+
+
+        const letters = [
+            "A",
+            "B",
+            "C",
+            "D"
+        ];
+
+
+        question.answers.forEach(
+            (answer, index) => {
+
+                const button =
+                    document.createElement("button");
+
+
+                button.className =
+                    "answer";
+
+
+                button.innerHTML =
+                    `
+                    <span class="answer-letter">
+                        ${letters[index]}
+                    </span>
+                    ${answer}
+                    `;
+
+
+                button.addEventListener(
+                    "mouseenter",
+                    hoverSound
+                );
+
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        chooseAnswer(index);
+
+                    }
+                );
+
+
+                answersContainer.appendChild(button);
+
+            }
+        );
+
+    }
+
+
+    /* ==========================================
+       WYBÓR ODPOWIEDZI
+    ========================================== */
+
+    function chooseAnswer(selectedIndex) {
+
+        const question =
+            examQuestions[currentQuestion];
+
+
+        if (
+            selectedIndex === question.correct
+        ) {
+
+            score++;
+
+        }
+
+
+        const buttons =
+            document.querySelectorAll(".answer");
+
+
+        buttons.forEach(
+            button => {
+                button.disabled = true;
+            }
+        );
+
+
+        /*
+         * Małe opóźnienie przed kolejnym pytaniem,
+         * żeby przejście wyglądało płynniej.
+         */
+
+        setTimeout(
+            () => {
+
+                currentQuestion++;
+
+                if (
+                    currentQuestion >=
+                    examQuestions.length
+                ) {
+
+                    finishExam();
+
+                } else {
+
+                    showQuestion();
+
+                }
+
+            },
+            350
+        );
+
+    }
+
+
+    /* ==========================================
+       KONIEC EGZAMINU
+    ========================================== */
+
+    function finishExam() {
+
+        clearInterval(timerInterval);
+
+
+        finishedTime =
+            Math.floor(
+                (Date.now() - startTime) / 1000
+            );
+
+
+        const percentage =
+            Math.round(
+                (score / examQuestions.length) * 100
+            );
+
+
+        document
+            .getElementById("examScreen")
+            .classList.add("hidden");
+
+
+        document
+            .getElementById("resultScreen")
+            .classList.remove("hidden");
+
+
+        document.getElementById("correctAnswers")
+            .textContent =
+            `${score}/10`;
+
+
+        document.getElementById("percentage")
+            .textContent =
+            `${percentage}%`;
+
+
+        document.getElementById("finalTime")
+            .textContent =
+            formatTime(finishedTime);
+
+
+        const resultMessage =
+            document.getElementById("resultMessage");
+
+
+        if (percentage >= 70) {
+
+            resultMessage.textContent =
+                "Gratulacje! Uzyskałeś bardzo dobry wynik.";
+
+            resultMessage.className =
+                "result-subtitle pass";
+
+        } else {
+
+            resultMessage.textContent =
+                "Tym razem się nie udało. Spróbuj ponownie.";
+
+            resultMessage.className =
+                "result-subtitle fail";
+
+        }
+
+    }
+
+
+    /* ==========================================
+       RESTART
+    ========================================== */
+
+    function restartExam() {
+
+        clearInterval(timerInterval);
+
+
+        document
+            .getElementById("resultScreen")
+            .classList.add("hidden");
+
+
+        document
+            .getElementById("examScreen")
+            .classList.add("hidden");
+
+
+        document
+            .getElementById("startScreen")
+            .classList.remove("hidden");
+
+
+        document.getElementById("firstName")
+            .value = "";
+
+        document.getElementById("lastName")
+            .value = "";
+
+        document.getElementById("ssn")
+            .value = "";
+
+    }
+
+</script>
+
+</body>
+</html>
+```
